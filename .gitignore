@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Build output
+main.js
+
+# Spec
+spec.md
+
+# Environment
+.env

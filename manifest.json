@@ -1,0 +1,10 @@
+{
+  "id": "todo-gcal-sync",
+  "name": "CalSync",
+  "version": "1.2.0",
+  "minAppVersion": "0.15.0",
+  "description": "Sync todo items with time estimates to Google Calendar. Tracks estimated vs actual time on completion.",
+  "author": "Jash Mota",
+  "authorUrl": "https://github.com/jash101",
+  "isDesktopOnly": true
+}
