@@ -2,7 +2,24 @@
 
 Reads todo items from your Obsidian notes and creates Google Calendar events with the correct duration.
 
-## Todo Format
+## Requirements
+
+- **Google account** — a Google account is required for full access.
+- **Google Cloud project** — you must create a Google Cloud project with the Google Calendar API enabled and generate OAuth 2.0 credentials (Desktop app). See [Setup](#setup) below.
+- **Desktop only** — this plugin uses a local HTTP server for OAuth and is not available on mobile.
+
+## Network disclosure
+
+This plugin connects to the following remote services:
+
+| Service | Endpoint | Purpose |
+|---------|----------|---------|
+| Google OAuth 2.0 | `accounts.google.com`, `oauth2.googleapis.com` | Authenticate your Google account and obtain/refresh access tokens |
+| Google Calendar API | `www.googleapis.com/calendar/v3` | Create, update, and delete calendar events corresponding to your todos |
+
+No data is sent to any other service. The plugin communicates exclusively with Google's APIs using credentials you provide.
+
+## Todo format
 
 ```markdown
 - [ ] Write blog post(2h)

@@ -296,7 +296,7 @@ class GoogleCalendarService {
       });
     } catch (e) {
       // Event may already be deleted — that's fine
-      console.log("Event delete failed (may already be gone):", e);
+      console.error("Event delete failed (may already be gone):", e);
     }
   }
 }
@@ -414,11 +414,10 @@ export default class TodoGCalPlugin extends Plugin {
     // Settings tab
     this.addSettingTab(new TodoGCalSettingTab(this.app, this));
 
-    console.log("CalSync plugin loaded");
   }
 
   async onunload() {
-    console.log("CalSync plugin unloaded");
+    // cleanup handled automatically
   }
 
   // ── Settings persistence ───────────────────────────────────────────────
@@ -646,16 +645,18 @@ class TodoGCalSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "CalSync" });
+    new Setting(containerEl).setName("CalSync").setHeading();
 
     // ── Google OAuth Setup ─────────────────────────────────────────────
 
-    containerEl.createEl("h3", { text: "Google Calendar Authentication" });
+    new Setting(containerEl)
+      .setName("Google Calendar authentication")
+      .setHeading();
 
-    containerEl.createEl("p", {
-      text: 'Go to Google Cloud Console → Create a project → Enable Google Calendar API → Create OAuth 2.0 credentials (Desktop app). No redirect URI setup needed.',
-      cls: "setting-item-description",
-    });
+    new Setting(containerEl)
+      .setDesc(
+        "Go to Google Cloud Console, create a project, enable Google Calendar API, and create OAuth 2.0 credentials (Desktop app). No redirect URI setup needed."
+      );
 
     new Setting(containerEl)
       .setName("Google Client ID")
@@ -687,8 +688,8 @@ class TodoGCalSettingTab extends PluginSettingTab {
       .setName("Authenticate with Google")
       .setDesc(
         this.plugin.settings.googleRefreshToken
-          ? "✅ Authenticated — you can re-authenticate if needed."
-          : "⚠️ Not yet authenticated. Click to begin."
+          ? "Authenticated. You can re-authenticate if needed."
+          : "Not yet authenticated. Click to begin."
       )
       .addButton((btn) =>
         btn.setButtonText("Authenticate").onClick(async () => {
@@ -698,7 +699,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     // ── Scheduling Config ──────────────────────────────────────────────
 
-    containerEl.createEl("h3", { text: "Scheduling" });
+    new Setting(containerEl).setName("Scheduling").setHeading();
 
     new Setting(containerEl)
       .setName("Start time (hour)")
@@ -759,26 +760,47 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     // ── Usage Info ─────────────────────────────────────────────────────
 
-    containerEl.createEl("h3", { text: "Usage" });
+    new Setting(containerEl).setName("Usage").setHeading();
 
     const usageDiv = containerEl.createDiv();
-    usageDiv.innerHTML = `
-      <p><strong>Todo format:</strong></p>
-      <pre style="background: var(--background-secondary); padding: 10px; border-radius: 5px;">
-- [ ] Write blog post(2h)
-- [ ] Team standup(30m)
-- [ ] Deep work session(1h30m)
-- [ ] Quick review(1.5h)
-- [x] Completed task(2h)(1h30m)  ← marked completed with time comparison
-- [x] Completed task(2h)         ← marked completed, actual time unavailable</pre>
-      <p><strong>Completed todos:</strong> The first parenthesis is the estimated time, the optional second parenthesis is the actual time required. The calendar event description is updated with a comparison.</p>
-      <p><strong>Commands:</strong></p>
-      <ul>
-        <li><code>CalSync: File</code> — syncs the current file</li>
-        <li><code>CalSync: All</code> — syncs every .md file in your vault</li>
-      </ul>
-      <p>Events stack starting at ${this.plugin.settings.startHour}:${String(this.plugin.settings.startMinute).padStart(2, "0")} today. Editing a todo's text or duration will update the calendar event on next sync.</p>
-    `;
+
+    const formatLabel = usageDiv.createEl("p");
+    formatLabel.createEl("strong", { text: "Todo format:" });
+
+    const pre = usageDiv.createEl("pre");
+    pre.style.background = "var(--background-secondary)";
+    pre.style.padding = "10px";
+    pre.style.borderRadius = "5px";
+    pre.textContent = [
+      "- [ ] Write blog post(2h)",
+      "- [ ] Team standup(30m)",
+      "- [ ] Deep work session(1h30m)",
+      "- [ ] Quick review(1.5h)",
+      "- [x] Completed task(2h)(1h30m)  \u2190 marked completed with time comparison",
+      "- [x] Completed task(2h)         \u2190 marked completed, actual time unavailable",
+    ].join("\n");
+
+    const completedLabel = usageDiv.createEl("p");
+    completedLabel.createEl("strong", { text: "Completed todos:" });
+    completedLabel.appendText(
+      " The first parenthesis is the estimated time, the optional second parenthesis is the actual time required. The calendar event description is updated with a comparison."
+    );
+
+    const commandsLabel = usageDiv.createEl("p");
+    commandsLabel.createEl("strong", { text: "Commands:" });
+
+    const commandList = usageDiv.createEl("ul");
+    const li1 = commandList.createEl("li");
+    li1.createEl("code", { text: "CalSync: File" });
+    li1.appendText(" \u2014 syncs the current file");
+    const li2 = commandList.createEl("li");
+    li2.createEl("code", { text: "CalSync: All" });
+    li2.appendText(" \u2014 syncs every .md file in your vault");
+
+    const startTime = `${this.plugin.settings.startHour}:${String(this.plugin.settings.startMinute).padStart(2, "0")}`;
+    usageDiv.createEl("p", {
+      text: `Events stack starting at ${startTime} today. Editing a todo's text or duration will update the calendar event on next sync.`,
+    });
   }
 
   async startOAuthFlow() {
@@ -801,7 +823,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
       ({ port, codePromise, cleanup } = await startLocalOAuthServer());
     } catch (e) {
       console.error("Failed to start local OAuth server:", e);
-      new Notice("❌ Could not start local auth server. Check console.");
+      new Notice("Could not start local auth server. Check console.");
       return;
     }
 
@@ -817,7 +839,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
       `&prompt=consent`;
 
     // Open browser for user to sign in
-    new Notice("Opening browser for Google sign-in…");
+    new Notice("Opening browser for Google sign-in...");
     window.open(authUrl);
 
     // Wait for Google to redirect back to our local server with the code
@@ -827,7 +849,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
     } catch (e) {
       cleanup();
       console.error("OAuth code capture failed:", e);
-      new Notice(`❌ Authentication failed: ${(e as Error).message}`);
+      new Notice(`Authentication failed: ${(e as Error).message}`);
       return;
     }
 
@@ -853,11 +875,11 @@ class TodoGCalSettingTab extends PluginSettingTab {
         Date.now() + data.expires_in * 1000;
       await this.plugin.saveSettings();
 
-      new Notice("✅ Google Calendar authenticated successfully!");
+      new Notice("Google Calendar authenticated successfully!");
       this.display(); // Refresh the settings UI
     } catch (e) {
       console.error("OAuth token exchange failed:", e);
-      new Notice("❌ Authentication failed. Check console for details.");
+      new Notice("Authentication failed. Check console for details.");
     }
   }
 }
