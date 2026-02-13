@@ -1,1 +1,5 @@
-/* Todo GCal Sync - no custom styles needed */
+.calsync-usage-pre {
+  background: var(--background-secondary);
+  padding: 10px;
+  border-radius: 5px;
+}

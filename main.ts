@@ -416,7 +416,7 @@ export default class TodoGCalPlugin extends Plugin {
 
   }
 
-  async onunload() {
+  onunload() {
     // cleanup handled automatically
   }
 
@@ -645,22 +645,20 @@ class TodoGCalSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    new Setting(containerEl).setName("CalSync").setHeading();
-
     // ── Google OAuth Setup ─────────────────────────────────────────────
 
     new Setting(containerEl)
-      .setName("Google Calendar authentication")
+      .setName("Authentication")
       .setHeading();
 
     new Setting(containerEl)
       .setDesc(
-        "Go to Google Cloud Console, create a project, enable Google Calendar API, and create OAuth 2.0 credentials (Desktop app). No redirect URI setup needed."
+        "Go to Google Cloud Console, create a project, enable Google Calendar API, and create OAuth 2.0 credentials (desktop app). No redirect URI setup needed."
       );
 
     new Setting(containerEl)
-      .setName("Google Client ID")
-      .setDesc("OAuth 2.0 Client ID from Google Cloud Console")
+      .setName("Google client ID")
+      .setDesc("OAuth 2.0 client ID from Google Cloud Console")
       .addText((text) =>
         text
           .setPlaceholder("xxxx.apps.googleusercontent.com")
@@ -672,8 +670,8 @@ class TodoGCalSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Google Client Secret")
-      .setDesc("OAuth 2.0 Client Secret")
+      .setName("Google client secret")
+      .setDesc("OAuth 2.0 client secret")
       .addText((text) =>
         text
           .setPlaceholder("GOCSPX-xxxx")
@@ -703,7 +701,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Start time (hour)")
-      .setDesc("Events start stacking from this hour (24h format)")
+      .setDesc("Events start stacking from this hour (24-hour format)")
       .addText((text) =>
         text
           .setPlaceholder("10")
@@ -719,7 +717,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Start time (minute)")
-      .setDesc("Events start stacking from this minute")
+      .setDesc("Events start stacking from this minute.")
       .addText((text) =>
         text
           .setPlaceholder("30")
@@ -735,7 +733,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Time zone")
-      .setDesc("IANA time zone (auto-detected)")
+      .setDesc("IANA time zone (auto-detected).")
       .addText((text) =>
         text
           .setValue(this.plugin.settings.timeZone)
@@ -767,10 +765,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
     const formatLabel = usageDiv.createEl("p");
     formatLabel.createEl("strong", { text: "Todo format:" });
 
-    const pre = usageDiv.createEl("pre");
-    pre.style.background = "var(--background-secondary)";
-    pre.style.padding = "10px";
-    pre.style.borderRadius = "5px";
+    const pre = usageDiv.createEl("pre", { cls: "calsync-usage-pre" });
     pre.textContent = [
       "- [ ] Write blog post(2h)",
       "- [ ] Team standup(30m)",
@@ -808,7 +803,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
     const clientSecret = this.plugin.settings.googleClientSecret;
 
     if (!clientId || !clientSecret) {
-      new Notice("Please fill in Client ID and Client Secret first.");
+      new Notice("Please fill in client ID and client secret first.");
       return;
     }
 
@@ -875,7 +870,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
         Date.now() + data.expires_in * 1000;
       await this.plugin.saveSettings();
 
-      new Notice("Google Calendar authenticated successfully!");
+      new Notice("Google Calendar authenticated successfully.");
       this.display(); // Refresh the settings UI
     } catch (e) {
       console.error("OAuth token exchange failed:", e);
