@@ -17,7 +17,7 @@ This plugin connects to the following remote services:
 | Google OAuth 2.0 | `accounts.google.com`, `oauth2.googleapis.com` | Authenticate your Google account and obtain/refresh access tokens |
 | Google Calendar API | `www.googleapis.com/calendar/v3` | Create, update, and delete calendar events corresponding to your todos |
 
-No data is sent to any other service. The plugin communicates exclusively with Google's APIs using credentials you provide.
+No data is sent to any other service. The plugin communicates exclusively with Google's APIs using the credentials you provide.
 
 ## Todo format
 
