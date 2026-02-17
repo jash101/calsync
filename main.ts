@@ -653,12 +653,12 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setDesc(
-        "Go to Google cloud console, create a project, enable Google calendar API, and create OAuth 2.0 credentials (desktop app). No redirect setup needed."
+        "Go to Google cloud console, create a project, enable Google calendar API, and create desktop app credentials. No redirect setup needed."
       );
 
     new Setting(containerEl)
       .setName("Google client ID")
-      .setDesc("OAuth 2.0 client ID from Google cloud console")
+      .setDesc("From your Google cloud console credentials")
       .addText((text) =>
         text
           .setPlaceholder("Enter client ID")
@@ -671,7 +671,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Google client secret")
-      .setDesc("OAuth 2.0 client secret from Google cloud console")
+      .setDesc("From your Google cloud console credentials")
       .addText((text) =>
         text
           .setPlaceholder("Enter client secret")
@@ -786,11 +786,9 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     const commandList = usageDiv.createEl("ul");
     const li1 = commandList.createEl("li");
-    li1.createEl("code", { text: "CalSync: file" });
-    li1.appendText(" \u2014 syncs the current file");
+    li1.appendText("Sync file \u2014 syncs the current file");
     const li2 = commandList.createEl("li");
-    li2.createEl("code", { text: "CalSync: all" });
-    li2.appendText(" \u2014 syncs every .md file in your vault");
+    li2.appendText("Sync all \u2014 syncs every .md file in your vault");
 
     const startTime = `${this.plugin.settings.startHour}:${String(this.plugin.settings.startMinute).padStart(2, "0")}`;
     usageDiv.createEl("p", {
