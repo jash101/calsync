@@ -493,7 +493,7 @@ export default class TodoGCalPlugin extends Plugin {
   async syncFile(file: TFile) {
     if (!this.settings.googleClientId || !this.settings.googleRefreshToken) {
       new Notice(
-        "Google Calendar not configured. Go to plugin settings to authenticate."
+        "Google calendar not configured. Go to plugin settings to authenticate."
       );
       return;
     }
@@ -653,15 +653,15 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setDesc(
-        "Go to Google Cloud Console, create a project, enable Google Calendar API, and create OAuth 2.0 credentials (desktop app). No redirect URI setup needed."
+        "Go to Google cloud console, create a project, enable Google calendar API, and create OAuth 2.0 credentials (desktop app). No redirect setup needed."
       );
 
     new Setting(containerEl)
       .setName("Google client ID")
-      .setDesc("OAuth 2.0 client ID from Google Cloud Console")
+      .setDesc("OAuth 2.0 client ID from Google cloud console")
       .addText((text) =>
         text
-          .setPlaceholder("xxxx.apps.googleusercontent.com")
+          .setPlaceholder("Enter client ID")
           .setValue(this.plugin.settings.googleClientId)
           .onChange(async (value) => {
             this.plugin.settings.googleClientId = value.trim();
@@ -671,10 +671,10 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Google client secret")
-      .setDesc("OAuth 2.0 client secret")
+      .setDesc("OAuth 2.0 client secret from Google cloud console")
       .addText((text) =>
         text
-          .setPlaceholder("GOCSPX-xxxx")
+          .setPlaceholder("Enter client secret")
           .setValue(this.plugin.settings.googleClientSecret)
           .onChange(async (value) => {
             this.plugin.settings.googleClientSecret = value.trim();
@@ -683,7 +683,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Authenticate with Google")
+      .setName("Authenticate")
       .setDesc(
         this.plugin.settings.googleRefreshToken
           ? "Authenticated. You can re-authenticate if needed."
@@ -733,7 +733,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Time zone")
-      .setDesc("IANA time zone (auto-detected).")
+      .setDesc("Auto-detected from your system.")
       .addText((text) =>
         text
           .setValue(this.plugin.settings.timeZone)
@@ -748,7 +748,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
       .setDesc('Use "primary" for your default calendar, or paste a specific calendar ID')
       .addText((text) =>
         text
-          .setPlaceholder("primary")
+          .setPlaceholder("Primary or calendar ID")
           .setValue(this.plugin.settings.calendarId)
           .onChange(async (value) => {
             this.plugin.settings.calendarId = value.trim();
@@ -786,10 +786,10 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     const commandList = usageDiv.createEl("ul");
     const li1 = commandList.createEl("li");
-    li1.createEl("code", { text: "CalSync: File" });
+    li1.createEl("code", { text: "CalSync: file" });
     li1.appendText(" \u2014 syncs the current file");
     const li2 = commandList.createEl("li");
-    li2.createEl("code", { text: "CalSync: All" });
+    li2.createEl("code", { text: "CalSync: all" });
     li2.appendText(" \u2014 syncs every .md file in your vault");
 
     const startTime = `${this.plugin.settings.startHour}:${String(this.plugin.settings.startMinute).padStart(2, "0")}`;
@@ -834,7 +834,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
       `&prompt=consent`;
 
     // Open browser for user to sign in
-    new Notice("Opening browser for Google sign-in...");
+    new Notice("Opening browser to sign in...");
     window.open(authUrl);
 
     // Wait for Google to redirect back to our local server with the code
@@ -870,7 +870,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
         Date.now() + data.expires_in * 1000;
       await this.plugin.saveSettings();
 
-      new Notice("Google Calendar authenticated successfully.");
+      new Notice("Authenticated successfully.");
       this.display(); // Refresh the settings UI
     } catch (e) {
       console.error("OAuth token exchange failed:", e);
