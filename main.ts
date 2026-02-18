@@ -653,12 +653,12 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setDesc(
-        "Go to Google cloud console, create a project, enable Google calendar API, and create desktop app credentials. No redirect setup needed."
+        "Set up a cloud project, enable the calendar API, and create desktop app credentials. No redirect setup needed."
       );
 
     new Setting(containerEl)
       .setName("Google client ID")
-      .setDesc("From your Google cloud console credentials")
+      .setDesc("From your cloud project credentials")
       .addText((text) =>
         text
           .setPlaceholder("Enter client ID")
@@ -671,7 +671,7 @@ class TodoGCalSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Google client secret")
-      .setDesc("From your Google cloud console credentials")
+      .setDesc("From your cloud project credentials")
       .addText((text) =>
         text
           .setPlaceholder("Enter client secret")
